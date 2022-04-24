@@ -4,4 +4,4 @@ py-tgcalls==0.8.3
 youtube_search
 pytube
 git+https://github.com/ophexor/yt-dl@master 
-
+youtube_dl
