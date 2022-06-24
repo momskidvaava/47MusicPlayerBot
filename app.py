@@ -290,6 +290,7 @@ async def video_play(_, message):
         return await message.reply_text("❗️Please send <code>/stop</code> to end current live streaming before play songs or videos.")
     
     m = await message.reply_text("🔄 Processing...")
+    await message.delete(m)
     if state == "play":
         damn = AudioPiped
         ded = yt_audio
@@ -332,7 +333,7 @@ async def video_play(_, message):
             position = add_to_queue(chat_id, yt.title, duration, link, playlink, doom, Q, thumb)
            # caps = f"#️⃣ [{yt.title}]({link}) <b>queued at position {position}</b> \n\n⏳ <b>Duration:</b> {duration}"
            # await message.reply_photo(thumb, caption=caps)
-            await m.delete()
+           # await m.delete()
         else:            
             await app.join_group_call(
                 chat_id,
@@ -340,8 +341,8 @@ async def video_play(_, message):
                 stream_type=StreamType().pulse_stream
             )
             add_to_queue(chat_id, yt.title, duration, link, playlink, doom, Q, thumb)
-           # await message.reply_photo(thumb, caption=cap, reply_markup=BUTTONS)
-           # await m.delete()
+            await message.reply_photo(thumb, caption=cap, reply_markup=BUTTONS)
+            await m.delete()
     except Exception as e:
         return await m.edit(str(e))
     
