@@ -267,13 +267,13 @@ async def callbacks(_, cq: CallbackQuery):
 @bot.on_message(filters.command("start") & filters.private)
 async def start_private(_, message):
     msg = START_TEXT.format(message.from_user.mention)
-    await message.reply_text(text = msg,
-                             reply_markup = START_BUTTONS)
+  #  await message.reply_text(text = msg,
+  #                           reply_markup = START_BUTTONS)
     
 
 @bot.on_message(filters.command("start") & filters.group)
 async def start_group(_, message):
-    await message.reply_text("🎧 <i>Music player is running.</i>")
+  #  await message.reply_text("🎧 <i>Music player is running.</i>")
     
     
 @bot.on_message(filters.command(["play", "vplay"]) & filters.group)
@@ -330,8 +330,8 @@ async def video_play(_, message):
     try:
         if chat_id in QUEUE:
             position = add_to_queue(chat_id, yt.title, duration, link, playlink, doom, Q, thumb)
-            caps = f"#️⃣ [{yt.title}]({link}) <b>queued at position {position}</b> \n\n⏳ <b>Duration:</b> {duration}"
-            await message.reply_photo(thumb, caption=caps)
+           # caps = f"#️⃣ [{yt.title}]({link}) <b>queued at position {position}</b> \n\n⏳ <b>Duration:</b> {duration}"
+           # await message.reply_photo(thumb, caption=caps)
             await m.delete()
         else:            
             await app.join_group_call(
@@ -340,8 +340,8 @@ async def video_play(_, message):
                 stream_type=StreamType().pulse_stream
             )
             add_to_queue(chat_id, yt.title, duration, link, playlink, doom, Q, thumb)
-            await message.reply_photo(thumb, caption=cap, reply_markup=BUTTONS)
-            await m.delete()
+           # await message.reply_photo(thumb, caption=cap, reply_markup=BUTTONS)
+           # await m.delete()
     except Exception as e:
         return await m.edit(str(e))
     
