@@ -264,15 +264,15 @@ async def callbacks(_, cq: CallbackQuery):
             await cq.answer("Skipped.")
             
 
-@bot.on_message(filters.command("start") & filters.private)
-async def start_private(_, message):
-    msg = START_TEXT.format(message.from_user.mention)
+# @bot.on_message(filters.command("start") & filters.private)
+# async def start_private(_, message):
+  #  msg = START_TEXT.format(message.from_user.mention)
   #  await message.reply_text(text = msg,
   #                           reply_markup = START_BUTTONS)
     
 
-@bot.on_message(filters.command("start") & filters.group)
-async def start_group(_, message):
+# @bot.on_message(filters.command("start") & filters.group)
+# async def start_group(_, message):
   #  await message.reply_text("🎧 <i>Music player is running.</i>")
     
     
@@ -413,7 +413,7 @@ async def skip(_, message):
             await message.reply_text(out)
             
             
-@bot.on_message(filters.command(["playlist", "queue"]) & filters.group)
+@bot.on_message(filters.command(["playlist", "queue","q"]) & filters.group)
 @is_admin
 async def playlist(_, message):
     chat_id = message.chat.id
@@ -438,7 +438,7 @@ async def playlist(_, message):
         await message.reply_text("❗Nothing is playing.")
     
 
-@bot.on_message(filters.command("stop") & filters.group)
+@bot.on_message(filters.command("stop","end","leave") & filters.group)
 @is_admin
 async def end(_, message):
     await message.delete()
