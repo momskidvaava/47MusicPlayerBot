@@ -11,7 +11,7 @@
 - Fast & Powerful player
 - Queues available
 - Multi chats supported
-- YouTube live links supported
+
 
 ## ✨ Heroku Deploy
 - Fork the repo and change template link in heroku deploy button to forked repo link (else you will not able to deploy)
