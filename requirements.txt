@@ -1,4 +1,4 @@
-pyrogram==1.4.12
+pyrogram==1.4.16
 tgcrypto
 py-tgcalls==0.8.6
 youtube_search
@@ -7,4 +7,4 @@ yt-dlp
 youtube_dl
 python-dotenv
 ffmpeg-python
-ffmpeg
+heroku3
