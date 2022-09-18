@@ -1,26 +1,3 @@
-"""
-MIT License
-
-Copyright (c) 2021 Janindu Malshan
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-"""
 
 import os
 import glob
@@ -73,27 +50,12 @@ Make your own bot using below source code.
 START_BUTTONS = InlineKeyboardMarkup(
     [
         [
-            InlineKeyboardButton("📨 Support", url="https://t.me/JaguarBots"),
-            InlineKeyboardButton("📚 Source Code", url="https://github.com/ImJanindu/47MusicPlayerBot")
+            InlineKeyboardButton("📨 Support", url="https://t.me/JaguarBots")           
         ]
     ]
 )
 
-BUTTONS = InlineKeyboardMarkup(
-    [
-        [
-            InlineKeyboardButton("⏸", callback_data="pause"),
-            InlineKeyboardButton("▶️", callback_data="resume"),
-            InlineKeyboardButton("⏭", callback_data="skip"),
-            InlineKeyboardButton("⏹", callback_data="stop"),
-            InlineKeyboardButton("🔇", callback_data="mute"),
-            InlineKeyboardButton("🔊", callback_data="unmute")
-        ],
-        [
-            InlineKeyboardButton("🗑 Close Menu", callback_data="close")
-        ]
-    ]
-)
+
 
 async def skip_current_song(chat_id):
     if chat_id in QUEUE:
@@ -128,16 +90,7 @@ async def skip_current_song(chat_id):
                     hm = MediumQualityVideo()
                 await app.change_stream(
                     chat_id, AudioVideoPiped(playlink, HighQualityAudio(), hm)
-                )
-            pop_an_item(chat_id)
-            await bot.send_photo(chat_id, photo = thumb,
-                                 caption = f"▶️ <b>Now playing:</b> [{title}]({link}) | `{type}` \n\n⏳ <b>Duration:</b> {duration}",
-                                 reply_markup = BUTTONS)
-            return [title, link, type, duration, thumb]
-    else:
-        return 0
-
-
+                )                      
 async def skip_item(chat_id, lol):
     if chat_id in QUEUE:
         chat_queue = get_queue(chat_id)
@@ -224,35 +177,27 @@ async def callbacks(_, cq: CallbackQuery):
     if data == "pause":
         try:
             await app.pause_stream(chat_id)
-            await cq.answer("Paused streaming.")
-        except:
-            await cq.answer("Nothing is playing.")
+            
       
     elif data == "resume":
         try:
             await app.resume_stream(chat_id)
-            await cq.answer("Resumed streaming.")
-        except:
-            await cq.answer("Nothing is playing.")   
+            
 
     elif data == "stop":
         await app.leave_group_call(chat_id)
         clear_queue(chat_id)
-        await cq.answer("Stopped streaming.")  
+        
 
     elif data == "mute":
         try:
             await app.mute_stream(chat_id)
-            await cq.answer("Muted streaming.")
-        except:
-            await cq.answer("Nothing is playing.")
+            
             
     elif data == "unmute":
         try:
             await app.unmute_stream(chat_id)
-            await cq.answer("Unmuted streaming.")
-        except:
-            await cq.answer("Nothing is playing.")
+            
             
     elif data == "skip":
         op = await skip_current_song(chat_id)
@@ -262,18 +207,19 @@ async def callbacks(_, cq: CallbackQuery):
             await cq.answer("Empty queue, stopped streaming.")
         else:
             await cq.answer("Skipped.")
+            await cq.answer.delete()
             
 
-# @bot.on_message(filters.command("start") & filters.private)
-# async def start_private(_, message):
-  #  msg = START_TEXT.format(message.from_user.mention)
-  #  await message.reply_text(text = msg,
-  #                           reply_markup = START_BUTTONS)
+ @bot.on_message(filters.command("start") & filters.private)
+ async def start_private(_, message):
+    msg = START_TEXT.format(message.from_user.mention)
+    await message.reply_text(text = msg,
+                             reply_markup = START_BUTTONS)
     
 
-# @bot.on_message(filters.command("start") & filters.group)
-# async def start_group(_, message):
-  #  await message.reply_text("🎧 <i>Music player is running.</i>")
+ @bot.on_message(filters.command("start") & filters.group)
+ async def start_group(_, message):
+    await message.reply_text("🎧 <i>Music player is running.</i>")
     
     
 @bot.on_message(filters.command(["play", "vplay"]) & filters.group)
@@ -313,7 +259,7 @@ async def video_play(_, message):
         thumb = results[0]["thumbnails"][0]
         duration = results[0]["duration"]
         yt = YouTube(link)
-        cap = f"▶️ <b>Now playing:</b> [{yt.title}]({link}) | `{doom}` \n\n⏳ <b>Duration:</b> {duration}"
+        
         try:
             ydl_opts = {"format": "bestvideo[height<=720]+bestaudio/best[height<=720]"}
             ydl = youtube_dl.YoutubeDL(ydl_opts)
@@ -340,50 +286,10 @@ async def video_play(_, message):
                 damn(playlink),
                 stream_type=StreamType().pulse_stream
             )
-            add_to_queue(chat_id, yt.title, duration, link, playlink, doom, Q, thumb)
-            await message.reply_photo(thumb, caption=cap, reply_markup=BUTTONS)
-            await m.delete()
+            add_to_queue(chat_id, yt.title, duration, link, playlink, doom, Q)           
+            
     except Exception as e:
-        return await m.edit(str(e))
-    
-    
-@bot.on_message(filters.command(["saudio", "svideo"]) & filters.group)
-@is_admin
-async def stream_func(_, message):
-    await message.delete()
-    state = message.command[0].lower()
-    try:
-        link = message.text.split(None, 1)[1]
-    except:
-        return await message.reply_text(f"<b>Usage:</b> <code>/{state} [link]</code>")
-    chat_id = message.chat.id
-    
-    if state == "saudio":
-        damn = AudioPiped
-        emj = "🎵"
-    elif state == "svideo":
-        damn = AudioVideoPiped
-        emj = "🎬"
-    m = await message.reply_text("🔄 Processing...")
-    try:
-        if chat_id in QUEUE:
-            return await m.edit("❗️Please send <code>/stop</code> to end voice chat before live streaming.")
-        elif chat_id in LIVE_CHATS:
-            await app.change_stream(
-                chat_id,
-                damn(link)
-            )
-            await m.edit(f"{emj} Started streaming: [Link]({link})", disable_web_page_preview=True)
-        else:    
-            await app.join_group_call(
-                chat_id,
-                damn(link),
-                stream_type=StreamType().pulse_stream)
-            await m.edit(f"{emj} Started streaming: [Link]({link})", disable_web_page_preview=True)
-            LIVE_CHATS.append(chat_id)
-    except Exception as e:
-        return await m.edit(str(e))
-
+        return await m.edit(str(e)  
 
 @bot.on_message(filters.command("skip") & filters.group)
 @is_admin
@@ -409,9 +315,7 @@ async def skip(_, message):
                     hm = await skip_item(chat_id, x)
                     if hm == 0:
                         pass
-                    else:
-                        out = out + "\n" + f"<b>#️⃣ {x}</b> - {hm}"
-            await message.reply_text(out)
+                    
             
             
 @bot.on_message(filters.command(["playlist", "queue","q"]) & filters.group)
@@ -422,10 +326,7 @@ async def playlist(_, message):
         chat_queue = get_queue(chat_id)
         if len(chat_queue) == 1:
             await message.delete()
-            await message.reply_text(
-                f"▶️ <b>Now playing:</b> [{chat_queue[0][0]}]({chat_queue[0][2]}) | `{chat_queue[0][4]}`",
-                disable_web_page_preview=True,
-            )
+            
         else:
             out = f"<b>📃 Player queue:</b> \n\n▶️ <b>Now playing:</b> [{chat_queue[0][0]}]({chat_queue[0][2]}) | `{chat_queue[0][4]}` \n"
             l = len(chat_queue)
@@ -433,8 +334,7 @@ async def playlist(_, message):
                 title = chat_queue[x][0]
                 link = chat_queue[x][2]
                 type = chat_queue[x][4]
-                out = out + "\n" + f"<b>#️⃣ {x}</b> - [{title}]({link}) | `{type}` \n"
-            await message.reply_text(out, disable_web_page_preview=True)
+                
     else:
         await message.reply_text("❗Nothing is playing.")
     
@@ -447,14 +347,10 @@ async def end(_, message):
     if chat_id in LIVE_CHATS:
         await app.leave_group_call(chat_id)
         LIVE_CHATS.remove(chat_id)
-        return await message.reply_text("⏹ Stopped streaming.")
         
     if chat_id in QUEUE:
         await app.leave_group_call(chat_id)
         clear_queue(chat_id)
-        await message.reply_text("⏹ Stopped streaming.")
-    else:
-        await message.reply_text("❗Nothing is playing.")
         
 
 @bot.on_message(filters.command("pause") & filters.group)
@@ -465,12 +361,7 @@ async def pause(_, message):
     if chat_id in QUEUE:
         try:
             await app.pause_stream(chat_id)
-            await message.reply_text("⏸ Paused streaming.")
-        except:
-            await message.reply_text("❗Nothing is playing.")
-    else:
-        await message.reply_text("❗Nothing is playing.")
-        
+            
         
 @bot.on_message(filters.command("resume") & filters.group)
 @is_admin
@@ -480,12 +371,7 @@ async def resume(_, message):
     if chat_id in QUEUE:
         try:
             await app.resume_stream(chat_id)
-            await message.reply_text("⏸ Resumed streaming.")
-        except:
-            await message.reply_text("❗Nothing is playing.")
-    else:
-        await message.reply_text("❗Nothing is playing.")
-        
+            
         
 @bot.on_message(filters.command("mute") & filters.group)
 @is_admin
@@ -495,12 +381,7 @@ async def mute(_, message):
     if chat_id in QUEUE:
         try:
             await app.mute_stream(chat_id)
-            await message.reply_text("🔇 Muted streaming.")
-        except:
-            await message.reply_text("❗Nothing is playing.")
-    else:
-        await message.reply_text("❗Nothing is playing.")
-        
+            
         
 @bot.on_message(filters.command("unmute") & filters.group)
 @is_admin
@@ -510,12 +391,7 @@ async def unmute(_, message):
     if chat_id in QUEUE:
         try:
             await app.unmute_stream(chat_id)
-            await message.reply_text("🔊 Unmuted streaming.")
-        except:
-            await message.reply_text("❗Nothing is playing.")
-    else:
-        await message.reply_text("❗Nothing is playing.")
-        
+            
         
 @bot.on_message(filters.command("restart"))
 async def restart(_, message):
