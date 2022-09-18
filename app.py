@@ -44,7 +44,6 @@ Hi <b>{}</b> 👋
 
 I can play music & stream videos in Telegram group voice chats. 
 
-Make your own bot using below source code.
 """
 
 START_BUTTONS = InlineKeyboardMarkup(
@@ -177,27 +176,27 @@ async def callbacks(_, cq: CallbackQuery):
     if data == "pause":
         try:
             await app.pause_stream(chat_id)
-            
+            await cq.answer("താൽകാലികമായി പാട്ട് നിർത്തി . ഞാൻ ഇനിയും പാടും")
       
     elif data == "resume":
         try:
             await app.resume_stream(chat_id)
-            
+            await cq.answer("വീണ്ടും പാടി തുടങ്ങി.പാട്ട് കേൾക്കണം എങ്കിൽ വിസി വാ")
 
     elif data == "stop":
         await app.leave_group_call(chat_id)
         clear_queue(chat_id)
-        
+        await cq.answer("🤐 ഞാൻ നിർത്തി ഇനി പാടൂല")
 
     elif data == "mute":
         try:
             await app.mute_stream(chat_id)
-            
+            await cq.answer("😭 അയ്യോ .... എന്നെ പാടാൻ സമ്മതിക്കുന്നില്ലെ")
             
     elif data == "unmute":
         try:
             await app.unmute_stream(chat_id)
-            
+            await cq.answer("😒 അന്ത ബയം ഇറുക്കണം")
             
     elif data == "skip":
         op = await skip_current_song(chat_id)
@@ -206,7 +205,7 @@ async def callbacks(_, cq: CallbackQuery):
         elif op == 1:
             await cq.answer("Empty queue, stopped streaming.")
         else:
-            await cq.answer("Skipped.")
+            await cq.answer("💃 ചെല്ലം ചാടി നടക്കണ പുൽചാടി")
             await cq.answer.delete()
             
 
