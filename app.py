@@ -43,16 +43,29 @@ LIVE_CHATS = []
 START_TEXT = """
 Hi <b>{}</b> 👋
 
-I can play music & stream videos in Telegram group voice chats. 
+I can play music & stream videos .
+⏤‌★𝐊𝐊 𝐀𝐑𝐌𝐘 𝐎𝐅𝐅𝐈𝐂𝐈𝐀𝐋ꗄ➺
 
-Make your own bot using below source code.
+This is a Social Media Friendship Gang with Ultra strong Bond of Lots of Love💞 . We always Try to bring forward the New ideas to  front of the members . We consider our members all are our Family Members . 
+
+         ☬C‌o‌n‌s‌t‌a‌n‌t‌ A‌d‌m‌i‌ns☬
+ ☬   [@FULLY_CRUAL_MIND](https://t.me/FULLY_CRUAL_MIND)
+ 🖥  @JinnSulthan
+ 🎭  [@im_casanova](https://t.me/im_casanova)
+ 🕺  @KottayamkunjachanM88 
+ 💃🏾  @Kappusz
+ 💙  [@L_The_Fallen_Angel](https://t.me/L_The_Fallen_Angel)
+
+Important:- We have a Group and Channel to Register Social media Complaint . 
+ one more thing :- They are Connected with Kerala cyber cell(dome), Kerala POLICE Force , indian Army Communication Dept.
+✍🏾Channel :- [@complaint_portal_tg](https://t.me/complaint_portal_tg)
+
 """
 
 START_BUTTONS = InlineKeyboardMarkup(
     [
         [
-            InlineKeyboardButton("📨 Support", url="https://t.me/JaguarBots"),
-            InlineKeyboardButton("📚 Source Code", url="https://github.com/ImJanindu/47MusicPlayerBot")
+            InlineKeyboardButton("📨 Support", url="https://t.me/KanimangalamKovilakam"),           
         ]
     ]
 )
@@ -244,6 +257,7 @@ async def video_play(_, message):
         return await message.reply_text("❗️Please send <code>/stop</code> to end current live streaming before play songs or videos.")
     
     m = await message.reply_text("🔄 Processing...")
+        await message.delete(m)
     if state == "play":
         damn = AudioPiped
         ded = yt_audio
