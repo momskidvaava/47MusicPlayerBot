@@ -205,7 +205,8 @@ async def callbacks(_, cq: CallbackQuery):
     elif data == "stop":
         await app.leave_group_call(chat_id)
         clear_queue(chat_id)
-        await cq.answer("❌")  
+        await cq.answer("❌")
+        await cq.answer.delete()  
 
     elif data == "mute":
         try:
