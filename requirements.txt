@@ -8,3 +8,4 @@ youtube_dl
 python-dotenv
 ffmpeg-python
 heroku3
+aiohttp
